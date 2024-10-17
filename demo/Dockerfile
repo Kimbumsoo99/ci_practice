@@ -1,14 +1,20 @@
-# OpenJDK 11을 기반으로 하는 이미지 사용
-FROM openjdk:11-jdk-slim
+# Java 21 기반 OpenJDK 이미지를 사용
+FROM openjdk:21-jdk-slim
 
 # 워킹 디렉토리 생성 및 설정
 WORKDIR /app
 
-# 현재 디렉토리의 모든 파일을 컨테이너의 /app 디렉토리로 복사
+# Gradle 캐시를 미리 생성하여 종속성 다운로드 시간 절약
+COPY gradle /app/gradle
+COPY gradlew /app/gradlew
+COPY build.gradle /app/build.gradle
+COPY settings.gradle /app/settings.gradle
+
+# 필요한 모든 소스 코드와 설정 파일을 컨테이너로 복사
 COPY . /app
 
-# Maven 빌드 및 JAR 파일 생성 (Maven이 이미 프로젝트 내에 존재한다고 가정)
-RUN ./mvnw clean package
+# Gradle 빌드 명령 실행 (Gradle wrapper 사용)
+RUN ./gradlew clean build --no-daemon
 
-# 컨테이너 실행 시 JAR 파일을 실행
-CMD ["java", "-jar", "target/demo-server.jar"]
+# 컨테이너 실행 시 빌드된 JAR 파일 실행
+CMD ["java", "-jar", "build/libs/demo-server.jar"]
