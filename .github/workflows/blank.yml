@@ -15,6 +15,10 @@ jobs:
       # 1. GitHub 리포지토리에서 코드 체크아웃
       - name: Checkout GitHub code
         uses: actions/checkout@v2
+        
+      - name: Debug GitLab URL and Token
+        run: |
+          echo "GitLab URL: ${{ secrets.GITLAB_REPO_URL }}"
 
       # 2. Git 설정 (GitHub Secrets에서 가져옴)
       - name: Set up Git
