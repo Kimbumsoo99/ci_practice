@@ -19,4 +19,7 @@ public class MainController {
     public String testP2(){
         return "test page";
     }
+
+    @GetMapping("/test3")
+    public String testP3(){ return  "test page"; }
 }
